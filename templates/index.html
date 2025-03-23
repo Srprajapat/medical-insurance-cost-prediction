@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance Cost Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: linear-gradient(to right, rgb(126, 41, 179), rgb(95, 15, 223), rgb(26, 48, 173));
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            background: rgb(255, 255, 255,0.4);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        select, button{
+            width: 96%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px, solid, #ddd9d9b6;
+            border-radius: 10px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: 1px solid #28a745;
+        }
+        button:hover {
+            background-color: #218838;
+            border: 1px solid #218838;
+            border-radius: 15px;
+        }
+        #result {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Medical Insurance Cost Prediction</h2>
+        <form id="prediction-form">
+            <label>Age: <input type="number" id="age" required></label>
+            <label>Sex: 
+                <select id="sex">
+                    <option value="0">Female</option>
+                    <option value="1">Male</option>
+                </select>
+            </label>
+            <label>BMI: <input type="number" id="bmi" step="0.1" required></label>
+            <label>Children: <input type="number" id="children" required></label>
+            <label>Smoker: 
+                <select id="smoker">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </label>
+            <label>Region:
+                <select id="region">
+                    <option value="3">Southwest</option>
+                    <option value="2">Southeast</option>
+                    <option value="1">Northwest</option>
+                    <option value="0">Northeast</option>
+                </select>
+            </label>
+            <button type="submit">Predict</button>
+        </form>
+        <h3 id="result"></h3>
+    </div>
+    
+    <script>
+        document.getElementById("prediction-form").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            const data = {
+                age: parseInt(document.getElementById("age").value),
+                sex: parseInt(document.getElementById("sex").value),
+                bmi: parseFloat(document.getElementById("bmi").value),
+                children: parseInt(document.getElementById("children").value),
+                smoker: parseInt(document.getElementById("smoker").value),
+                region: parseInt(document.getElementById("region").value)
+            };
+            
+            const response = await fetch("http://127.0.0.1:8000/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await response.json();
+            document.getElementById("result").innerText = "Predicted Cost: $" + result.predicted_insurance_cost;
+        });
+    </script>
+</body>
+</html>
