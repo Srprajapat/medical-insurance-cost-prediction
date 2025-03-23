@@ -4,21 +4,12 @@ from fastapi.templating import Jinja2Templates
 import numpy as np
 import uvicorn
 import pickle
+import os
 
 app = FastAPI()
 
 with open("xgboost.pkl", "rb") as model_file:
     model = pickle.load(model_file)
-
-# from pydantic import BaseModel
-
-# class InsuranceData(BaseModel):
-#     age: int
-#     sex: int  
-#     bmi: float
-#     children: int
-#     smoker: int  
-#     region: int 
 
 templates = Jinja2Templates(directory="templates")
 
@@ -42,4 +33,5 @@ async def predict(
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    port = int(os.environ.get("PORT", 8000))  
+    uvicorn.run(app, host="0.0.0.0", port=port)
